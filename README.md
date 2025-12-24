@@ -1,4 +1,5 @@
 🚆 Railway Track Fall Detection System Using R-CNN for Infrastructure Safety
+
 📌 Project Overview
 
 Railway track failures such as track falls, cracks, and obstacles can cause severe accidents if not detected in time. This project presents an AI-based railway track fall detection system using Region-Based Convolutional Neural Networks (R-CNN) to automatically identify defective track conditions from images.
@@ -140,6 +141,8 @@ Improved accuracy with larger annotated datasets
 
 👩‍💻 Author
 
-Vishnu Priya
+Dande Vishnu Priya
+
 B.Tech – Artificial Intelligence & Machine Learning
+
 St. Ann’s College of Engineering and Technology, Chirala
