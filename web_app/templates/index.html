@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Railway Track Fault Detection</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:"Segoe UI", Arial, sans-serif;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:url("{{ url_for('static', filename='train neon img.jpg') }}") center/cover no-repeat;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:60px 20px;
+}
+
+/* ---------- MAIN WRAPPER ---------- */
+.main-wrapper{
+    width:100%;
+    display:flex;
+    justify-content:center;
+}
+
+/* ---------- GLASS CARD ---------- */
+.glass-card{
+    width:520px;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(12px);
+    padding:36px;
+    border-radius:20px;
+    color:#fff;
+    text-align:center;
+    box-shadow:0 0 40px rgba(0,0,0,0.65);
+}
+
+/* ---------- TEXT ---------- */
+h1{
+    margin:0 0 12px;
+    font-size:26px;
+    font-weight:600;
+}
+
+.subtitle{
+    font-size:14.5px;
+    opacity:0.85;
+    margin-bottom:40px;   /* ✅ SPACE BELOW SUBTITLE */
+}
+
+/* ---------- FORM ---------- */
+form{
+    display:flex;
+    flex-direction:column;
+    gap:30px;            /* ✅ MAIN SPACING FIX */
+}
+
+/* ---------- UPLOAD ---------- */
+.upload-box{
+    padding:36px;
+    border:2px dashed #aaa;
+    border-radius:14px;
+    cursor:pointer;
+    background:rgba(255,255,255,0.08);
+    transition:0.3s;
+}
+
+.upload-box:hover{
+    border-color:#1cc88a;
+}
+
+.upload-box.uploaded{
+    border-color:#1cc88a;
+    background:rgba(28,200,138,0.25);
+}
+
+.upload-box span{
+    font-size:15px;
+}
+
+/* ---------- IMAGE PREVIEW ---------- */
+#previewImg{
+    display:none;
+    width:100%;
+    border-radius:12px;
+    border:2px solid #1cc88a;
+}
+
+/* ---------- BUTTON ---------- */
+button{
+    width:100%;
+    padding:15px;
+    background:#1cc88a;
+    border:none;
+    border-radius:12px;
+    font-size:17px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#17a673;
+}
+
+.footer-text{
+    margin-top:24px;   /* ✅ SPACE ABOVE FOOTER */
+    opacity:0.7;
+    font-size:13px;
+}
+
+/* ---------- AI FLOATING ICON ---------- */
+.ai-wrapper{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    z-index:1000;
+    animation:floatBot 3s ease-in-out infinite;
+}
+
+.ai-label{
+    margin-bottom:6px;
+    padding:4px 10px;
+    background:rgba(0,0,0,0.6);
+    color:#1cc88a;
+    font-size:12px;
+    font-weight:600;
+    border-radius:10px;
+    backdrop-filter:blur(6px);
+}
+
+.ai-toggle{
+    background:#1cc88a;
+    color:#000;
+    width:56px;
+    height:56px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:50%;
+    font-size:24px;
+    cursor:pointer;
+    box-shadow:0 0 20px rgba(0,0,0,0.45);
+}
+
+@keyframes floatBot{
+    0%{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+    100%{ transform:translateY(0); }
+}
+
+/* ---------- AI CHAT ---------- */
+.ai-chat{
+    position:fixed;
+    bottom:105px;
+    right:25px;
+    width:320px;
+    height:400px;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(12px);
+    border-radius:18px;
+    display:none;
+    flex-direction:column;
+    color:#fff;
+    z-index:1000;
+}
+
+.ai-header{
+    padding:14px;
+    background:#000;
+    text-align:center;
+    font-weight:600;
+    position:relative;
+    border-radius:18px 18px 0 0;
+}
+
+.ai-header span{
+    background:linear-gradient(
+        90deg,
+        #ff004c,
+        #ff9f00,
+        #ffee00,
+        #00ff85,
+        #00cfff,
+        #7a5cff,
+        #ff00ff
+    );
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;  /* Required for Chrome, Edge, Safari */
+    background-clip: text;          /* Standard property */
+    -webkit-text-fill-color: transparent; /* Important for WebKit */
+    color: transparent;
+    animation:rainbow 5s linear infinite;
+    background-size:300%;
+}
+.ai-close{
+    position:absolute;
+    right:14px;
+    top:10px;
+    font-size:18px;
+    cursor:pointer;
+    color:#fff;
+    opacity:0.8;
+}
+
+.ai-close:hover{
+    opacity:1;
+    transform:scale(1.1);
+}
+
+
+@keyframes rainbow{
+    0%{background-position:0%;}
+    100%{background-position:300%;}
+}
+
+.ai-body{
+    flex:1;
+    padding:14px;
+    overflow-y:auto;
+    font-size:14px;
+}
+
+.ai-msg{
+    margin-bottom:12px;
+    padding:10px 12px;
+    border-radius:12px;
+    max-width:85%;
+}
+
+.user{
+    background:#1cc88a;
+    color:#000;
+    margin-left:auto;
+}
+
+.bot{
+    background:rgba(255,255,255,0.18);
+}
+
+.ai-input{
+    display:flex;
+    gap:8px;
+    padding:12px;
+}
+
+.ai-input input{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+}
+
+.ai-input button{
+    padding:10px 14px;
+    border-radius:10px;
+    background:#1cc88a;
+    border:none;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-wrapper">
+    <div class="glass-card">
+
+        <h1>🚆 Railway Track Fault Detection</h1>
+        <p class="subtitle">AI-powered system for railway infrastructure safety</p>
+
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+
+            <label class="upload-box" id="uploadBox">
+                <input type="file" hidden required id="imageInput" name="image" accept="image/*">
+                <span id="uploadText">📂 Click or Drag Image Here</span>
+            </label>
+
+            <img id="previewImg">
+
+            <button type="submit">Analyze Track</button>
+
+        </form>
+
+        <div class="footer-text">Powered by R-CNN</div>
+
+    </div>
+</div>
+
+<!-- AI FLOATING BUTTON -->
+<div class="ai-wrapper">
+    <div class="ai-label">RailBotix</div>
+    <div class="ai-toggle" onclick="toggleAI()">🤖</div>
+</div>
+
+<!-- AI CHAT -->
+<div class="ai-chat" id="aiChat">
+    <div class="ai-header">
+    <span>RailBotix</span>
+    <div class="ai-close" onclick="closeAI()">✕</div>
+</div>
+
+    <div class="ai-body" id="aiBody">
+        <div class="ai-msg bot">
+            Hello 👋 I am <b>RailBotix</b>. Ask me about the app.
+        </div>
+    </div>
+    <div class="ai-input">
+        <input type="text" id="aiInput" placeholder="Ask here...">
+        <button onclick="sendAI()">➤</button>
+    </div>
+</div>
+
+<script>
+const imageInput=document.getElementById("imageInput");
+const uploadText=document.getElementById("uploadText");
+const uploadBox=document.getElementById("uploadBox");
+const previewImg=document.getElementById("previewImg");
+
+imageInput.addEventListener("change",()=>{
+    const file=imageInput.files[0];
+    if(file){
+        uploadText.innerText="✅ Image Uploaded Successfully";
+        uploadBox.classList.add("uploaded");
+        const reader=new FileReader();
+        reader.onload=()=>{
+            previewImg.src=reader.result;
+            previewImg.style.display="block";
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+/* ---------- AI CHAT LOGIC ---------- */
+
+function resetChat(){
+    document.getElementById("aiBody").innerHTML = `
+        <div class="ai-msg bot">
+            Hello 👋 I am <b>RailBotix</b>. Ask me about the app.
+        </div>
+    `;
+}
+
+function toggleAI(){
+    const chat=document.getElementById("aiChat");
+
+    if(chat.style.display==="flex"){
+        chat.style.display="none";
+        resetChat();   // clear when closed
+    }else{
+        chat.style.display="flex";
+        resetChat();   // clear when opened
+    }
+}
+
+function closeAI(){
+    document.getElementById("aiChat").style.display="none";
+    resetChat();       // clear history
+}
+
+/* ---------- SEND MESSAGE ---------- */
+
+function sendAI(){
+    const input = document.getElementById("aiInput");
+    const body = document.getElementById("aiBody");
+
+    const userText = input.value.trim();
+    if(!userText) return;
+
+    body.innerHTML += `<div class="ai-msg user">${userText}</div>`;
+    body.scrollTop = body.scrollHeight;
+
+    const text = userText.toLowerCase();
+    let reply = "I am RailBotix 🤖. Please ask about the project or app usage.";
+
+    if(text.includes("goal") || text.includes("purpose")){
+        reply = "The goal of this project is to automatically detect faults in railway tracks using image-based AI.";
+    }
+    else if(text.includes("problem")){
+        reply = "This system reduces manual inspection and helps prevent railway accidents.";
+    }
+    else if(text.includes("model") || text.includes("algorithm")){
+        reply = "This project uses a Region-based Convolutional Neural Network (R-CNN).";
+    }
+    else if(text.includes("r-cnn")){
+        reply = "R-CNN detects defective regions using bounding boxes.";
+    }
+    else if(text.includes("cnn")){
+        reply = "CNN extracts features, while R-CNN also locates defect areas.";
+    }
+    else if(text.includes("input")){
+        reply = "The system takes railway track images as input.";
+    }
+    else if(text.includes("output") || text.includes("result")){
+        reply = "The system outputs whether the track is Safe or Defective.";
+    }
+    else if(text.includes("dataset")){
+        reply = "A custom dataset of railway track images is used.";
+    }
+    else if(text.includes("upload")){
+        reply = "Upload a clear railway track image using the upload box.";
+    }
+    else if(text.includes("analyze")){
+        reply = "Click the Analyze Track button to start detection.";
+    }
+    else if(text.includes("mobile")){
+        reply = "Yes, this app works on mobile devices.";
+    }
+    else if(text.includes("future")){
+        reply = "Future scope includes live video detection and IoT integration.";
+    }
+    else if(text.includes("railbotix")){
+        reply = "I am RailBotix 🤖, your railway fault detection assistant.";
+    }
+    else if(text.includes("help")){
+        reply = "I can help with project explanation and app usage.";
+    }
+    else if(text.includes("what is your project") || text.includes("project about")){
+        reply = "This project automatically detects defects in railway tracks using AI and image processing.";
+    }
+    else if(text.includes("domain")){
+        reply = "This project belongs to the Artificial Intelligence and Computer Vision domain.";
+    }
+    else if(text.includes("goal") || text.includes("purpose")){    }
+    else if(text.includes("problem")){
+        reply = "Manual railway inspection is slow and risky. This system reduces human effort and improves safety.";
+    }
+
+    /* -------- MODEL & AI -------- */
+
+    else if(text.includes("how does it detect") || text.includes("detect defects")){
+        reply = "The uploaded image is processed by an R-CNN model which identifies defective regions and classifies the track.";
+    }
+    else if(text.includes("model") || text.includes("algorithm")){
+        reply = "The project uses a Region-based Convolutional Neural Network (R-CNN).";
+    }
+    else if(text.includes("why r-cnn")){
+        reply = "R-CNN is chosen because it not only classifies defects but also locates the exact defective regions.";
+    }
+    else if(text.includes("cnn") && !text.includes("r-cnn")){
+        reply = "CNN classifies images, but R-CNN also detects where the defect is present.";
+    }
+    else if(text.includes("ai") || text.includes("artificial intelligence")){
+        reply = "AI is used to learn patterns from railway images and automatically detect defects.";
+    }
+
+    /* -------- DATASET & TRAINING -------- */
+
+    else if(text.includes("dataset")){
+        reply = "A custom dataset of defective and non-defective railway track images is used.";
+    }
+    else if(text.includes("training")){
+        reply = "The model is trained using labeled railway track images to learn defect patterns.";
+    }
+    else if(text.includes("accuracy")){
+        reply = "Accuracy depends on dataset quality, image clarity, and training parameters.";
+    }
+
+    /* -------- INPUT / OUTPUT -------- */
+
+    else if(text.includes("input")){
+        reply = "The input is a railway track image uploaded by the user.";
+    }
+    else if(text.includes("output") || text.includes("result")){
+        reply = "The output shows whether the track is defective or safe, along with detected regions.";
+    }
+    else if(text.includes("bounding box")){
+        reply = "Bounding boxes highlight the exact location of defects in the image.";
+    }
+
+    /* -------- APP USAGE -------- */
+
+    else if(text.includes("how to use") || text.includes("use the app")){
+        reply = "Upload a railway track image and click the Analyze Track button.";
+    }
+    else if(text.includes("upload")){
+        reply = "Click or drag a railway track image into the upload box.";
+    }
+    else if(text.includes("analyze")){
+        reply = "Click Analyze Track to start defect detection.";
+    }
+    else if(text.includes("image format")){
+        reply = "Supported formats are JPG, PNG, and JPEG.";
+    }
+    else if(text.includes("error") || text.includes("wrong image")){
+        reply = "Please upload a clear railway track image for accurate results.";
+    }
+
+    /* -------- REAL WORLD & FUTURE -------- */
+
+    else if(text.includes("real time")){
+        reply = "Currently it works on images. It can be extended to real-time video in the future.";
+    }
+    else if(text.includes("future scope") || text.includes("future")){
+        reply = "Future scope includes real-time detection using cameras, drones, and IoT sensors.";
+    }
+    else if(text.includes("replace humans")){
+        reply = "No, this system assists human inspection and improves safety.";
+    }
+    else if(text.includes("limitations")){
+        reply = "Performance depends on image quality, lighting conditions, and dataset diversity.";
+    }
+
+    /* -------- STUDENT STYLE QUESTIONS -------- */
+
+    else if(text.includes("deep learning")){
+        reply = "Yes, this is a deep learning-based project.";
+    }
+    else if(text.includes("yolo")){
+        reply = "YOLO can be used, but R-CNN provides better region-level accuracy.";
+    }
+    else if(text.includes("mobile")){
+        reply = "Yes, the application is responsive and works on mobile devices.";
+    }
+    else if(
+    text.includes("login") ||
+    text.includes("log in") ||
+    text.includes("how to login") ||
+    text.includes("sign in") ||
+    text.includes("username") ||
+    text.includes("password")){
+    reply = "To login, enter your valid username and password on the login page. After successful authentication, you will be redirected to the main railway track analysis page.";
+    }
+    else if(
+    text.includes("predict") && 
+    (text.includes("crack") || text.includes("defect"))){
+    reply = "The system predicts defective cracks by analyzing railway track images using an R-CNN model. The model detects crack patterns, locates the defective region using bounding boxes, and classifies the track as defective or safe based on learned features.";
+    }
+    else if(
+    text.includes("crack") && text.includes("image")){
+    reply = "Cracks are detected by extracting texture and edge features from the image and comparing them with trained defect patterns in the dataset.";
+    }
+    else if(
+    (text.includes("benefits") || text.includes("advantages")) ||
+    (text.includes("crack") || text.includes("defect") || text.includes("system"))){
+    reply = "Benefits of this system include automatic crack detection, reduced manual inspection, improved railway safety, faster analysis, and accurate localization of defects using bounding boxes and send alerts.";
+    }
+    else if(
+    text.includes("limitations") || 
+    text.includes("drawbacks")){
+    reply = "The disadvantages include dependency on image quality, requirement of a trained dataset, higher computational cost due to R-CNN, and limited performance under poor lighting or unclear images.";
+    }
+
+
+    /* -------- BOT IDENTITY -------- */
+
+    else if(text.includes("who are you") || text.includes("railbotix")){
+        reply = "I am RailBotix 🤖, your railway track fault detection assistant.";
+    }
+    else if(text.includes("help")){
+        reply = "I can help you with project explanation, viva questions, and app usage.";
+    }
+
+    setTimeout(()=>{
+        body.innerHTML += `<div class="ai-msg bot">${reply}</div>`;
+        body.scrollTop = body.scrollHeight;
+    }, 400);
+
+    input.value="";
+}
+
+/* ---------- ENTER KEY SUPPORT ---------- */
+document.getElementById("aiInput").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+        e.preventDefault();
+        sendAI();
+    }
+});
+</script>
+
+</body>
+</html>

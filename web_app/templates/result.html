@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Detection Result</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0b1f35, #102b4a, #0b1828);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: white;
+}
+
+/* ===== FLOATING CIRCLES ===== */
+.circle {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.04)
+    );
+    animation: floatY 6s ease-in-out infinite;
+}
+
+.circle.left { left: 40px; top: 140px; }
+.circle.right { right: 40px; top: 280px; animation-delay: 3s; }
+
+@keyframes floatY {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-25px); }
+    100% { transform: translateY(0); }
+}
+
+/* ===== LAYOUT ===== */
+.page-wrapper {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    z-index: 10;
+}
+
+/* ===== RESULT CARD ===== */
+.card {
+    width: 420px;
+    padding: 30px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.02);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    text-align: center;
+}
+
+.result-title {
+    margin-bottom: 14px;
+    position: relative;
+}
+
+.result-title::after {
+    content: "";
+    display: block;
+    width: 400px;
+    height: 3px;
+    margin: 8px auto 0;
+    background: linear-gradient(90deg, #ff4fa3, #00d4ff);
+    box-shadow: 0 0 8px #ff4fa3, 0 0 16px #00d4ff;
+}
+
+img {
+    width: 100%;
+    border-radius: 10px;
+    margin: 20px 0;
+    border: 2px solid rgba(255,255,255,0.25);
+}
+
+.status-safe { color: #4cff8f; font-size: 25px; font-weight: bold; }
+.status-danger { color: #ff4c4c; font-size: 25px; font-weight: bold; }
+.status-warn { color: #ffd24c; font-size: 25px; font-weight: bold; }
+
+.btn {
+    display: block;
+    width: 70%;
+    margin: 0 auto;
+    padding: 12px;
+    background: linear-gradient(135deg, #00c8ff, #0084ff);
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/* ===== DECISION ACCOUNTABILITY ===== */
+.decision-panel {
+    width: 360px;
+    background: rgba(0,0,0,0.55);
+    border-radius: 14px;
+    margin-top: 100px;
+    transform: translateY(-120%);
+    animation: dropPanel 1.2s ease-out forwards;
+    box-shadow: 0 0 20px rgba(0,212,255,0.2);
+}
+
+@keyframes dropPanel {
+    0% { transform: translateY(-120%); opacity: 0; }
+    70% { transform: translateY(10px); opacity: 1; }
+    100% { transform: translateY(0); }
+}
+
+.decision-header {
+    padding: 14px;
+    text-align: center;
+    font-weight: bold;
+    background: linear-gradient(90deg, #00d4ff, #0077ff);
+    color: black;
+}
+
+.decision-content {
+    padding: 18px;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ===== ALERT ===== */
+.alert-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    padding: 18px;
+    background: linear-gradient(135deg, #ff0000, #b30000);
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    animation: pulse 1.2s infinite;
+    z-index: 9999;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px red; }
+    50% { box-shadow: 0 0 25px red; }
+    100% { box-shadow: 0 0 10px red; }
+}
+.go-login-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    color: #ffffff;
+    background: linear-gradient(135deg, #00e6ff, #0066ff);
+    border-radius: 30px;
+
+    box-shadow:
+        0 0 10px #00e6ff,
+        0 0 20px rgba(0, 230, 255, 0.7);
+
+    z-index: 999;
+    transition: 0.3s ease;
+}
+
+.go-login-btn:hover {
+    transform: scale(1.08);
+    box-shadow:
+        0 0 20px #00ffff,
+        0 0 40px #00ffff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="circle left"></div>
+<div class="circle right"></div>
+
+<div class="page-wrapper">
+
+    <div class="card">
+        <h1 class="result-title">Detection Result</h1>
+
+        {% if status == "DEFECTIVE" %}
+            <p class="status-danger">⚠ Railway Track Defective</p>
+        {% elif status == "SAFE" %}
+            <p class="status-safe">Railway Track is Safe</p>
+        {% else %}
+            <p class="status-warn">⚠ Detection Not Clear</p>
+            <p>Please upload a clearer image.</p>
+        {% endif %}
+
+        <img src="{{ url_for('static', filename='results/' + result_image) }}">
+        <a class="btn" href="{{ url_for('index') }}">Upload Another Image</a>
+    </div>
+
+    <div class="decision-panel">
+        <div class="decision-header">Decision Accountability</div>
+        <div class="decision-content">
+            <p><b>Decision:</b> {{ status }}</p>
+            <p><b>Model Type:</b> Region-Based Convolutional Neural Network (R-CNN)</p>
+            <p><b>Confidence:</b> {{ confidence }}%</p>
+            <p><b>Risk Level:</b> {{ risk }}</p>
+            <p><b>Reason:</b> {{ reason }}</p>
+            <p><b>Recommended Action:</b> {{ action }}</p>
+        </div>
+    </div>
+
+</div>
+
+{% if status == "DEFECTIVE" %}
+<script>
+    function speakAlert() {
+        const msg = new SpeechSynthesisUtterance();
+        const popup = document.createElement("div");
+        popup.className = "alert-popup";
+        popup.innerText = "🚨 Defective Track Detected!";
+        document.body.appendChild(popup);
+        msg.text = "Alert! Alert! The railway track is defective. Immediate inspection required.";
+        msg.lang = "en-US";
+        msg.rate = 1;     // slower = clearer
+        msg.pitch = 1.0;
+        msg.volume = 1.0;  // max allowed
+
+        // speak multiple times for loud effect
+        window.speechSynthesis.speak(msg);
+        setTimeout(() => window.speechSynthesis.speak(msg), 2500);
+        setTimeout(() => window.speechSynthesis.speak(msg), 5000);
+    }
+
+    // slight delay so projector audio initializes
+    setTimeout(speakAlert, 800);
+</script>
+{% endif %}
+
+<a href="/login" class="go-login-btn">
+    Go to Login
+</a>
+
+
+</body>
+</html>

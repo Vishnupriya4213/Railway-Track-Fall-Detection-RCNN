@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Railway Track Fault Detection - Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
+            background: linear-gradient(130deg, #30007a, #4f00ff, #ff00d4, #30007a);
+            background-size: 400% 400%;
+            animation: waves 10s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes waves {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .main-box {
+            width: 1200px;
+            height: 95vh;
+            background: rgba(0,0,0,0.35);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            background: #0c0f27;
+            padding: 14px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .college-bar {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            color: white;
+            text-align: center;
+        }
+
+        .college-logo {
+            width: 90px;
+            height: 90px;
+        }
+
+        .college-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .college-bar span {
+            font-size: 26px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* ===== PROJECT TITLE ===== */
+        .project-name {
+            padding: 12px 30px;
+            text-align: center;
+            font-size: 19px;
+            font-weight: 500;
+            color: #00d4ff;
+            background: rgba(12,15,39,0.95);
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* ===== LEFT PANEL ===== */
+        .left {
+            width: 48%;
+            background: rgba(12,15,39,0.95);
+            border-radius: 18px;
+            padding: 22px;
+            color: white;
+        }
+
+        .left h3 {
+            margin-top: 0;
+            color: #00d4ff;
+            font-size: 20px;
+        }
+
+        .left ul {
+            padding-left: 18px;
+            font-size: 14.5px;
+            line-height: 1.8;
+        }
+
+        .left a {
+            color: #00d4ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .left a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .left button {
+            margin-top: 16px;
+            padding: 9px 16px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ff007f, #ff1ab5);
+            color: white;
+            cursor: pointer;
+        }
+
+        /* ===== RIGHT LOGIN ===== */
+        .right {
+            width: 52%;
+            background: rgba(12,15,39,0.95);
+            border-radius: 18px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .profile-icon {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            margin: auto;
+            margin-bottom: 14px;
+            border: 2px solid #ef61f4;
+            overflow: hidden;
+            box-shadow: 0 0 16px rgba(249,165,239,2);
+            animation: glowPulse 2s infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from {
+                box-shadow: 0 0 8px #ee00ff, 0 0 16px #ee00ff;
+            }
+            to {
+                box-shadow: 0 0 15px #ee00ff, 0 0 40px #ee00ff;
+            }
+        }
+
+        .profile-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .right h2 {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: none;
+            background: #1c203d;
+            color: white;
+            margin-bottom: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            border: none;
+            font-size: 15px;
+            background: linear-gradient(135deg, #ff007f, #ff1ab5);
+            color: white;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-link a {
+            color: #00d4ff;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .forgot-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-box">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="college-bar">
+            <div class="college-logo">
+                <img src="static/Sacet logo.png">
+            </div>
+            <span>
+                ST. ANN'S COLLEGE OF ENGINEERING & TECHNOLOGY<br>
+                (AUTONOMOUS) | CSE – AI & ML
+            </span>
+        </div>
+    </div>
+
+    <!-- PROJECT NAME -->
+    <div class="project-name">
+        Railway Track Fault Detection using Region-Based Convolutional Neural Networks for People Safety
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- LEFT PANEL -->
+        <div class="left">
+
+            <div id="homeMenu">
+                <h3>Home</h3>
+                <ul>
+                    <li><a onclick="openSection('goal')">Project Goal</a></li>
+                    <li><a onclick="openSection('details')">Project Details</a></li>
+                    <li><a onclick="openSection('team')">Team Details</a></li>
+                </ul>
+                <p style="font-size:14.5px; line-height:1.8;">
+                    This project focuses on enhancing railway safety by using
+                    Artificial Intelligence to automatically monitor railway tracks
+                    and identify defects that may lead to accidents.
+                </p>
+            </div>
+
+            <div id="goal" class="section">
+                <h3>Project Goal</h3>
+                <ul>
+                    <li>Develop an AI-based railway track monitoring system.</li>
+                    <li> Use Region-Based CNN (R-CNN) for accurate fault localization.</li>
+                    <li>Classify tracks as Safe or Defective.</li>
+                    <li>Trigger alerts when defective tracks are detected.</li>
+                    <li>Improve railway safety and prevent accidents.</li>
+                </ul>
+                <button onclick="goHome()">⬅ Back to Home</button>
+            </div>
+
+            <div id="details" class="section">
+                <h3>Project Details</h3>
+                <ul>
+                    <li>Deep learning model: Faster R-CNN.</li>
+                    <li>Detects defective regions with bounding boxes.</li>
+                    <li>Supports image and video-based detection.</li>
+                    <li>Integrated alert mechanism for fault detection.</li>
+                    <li>Decision Accountability: Each detection includes the decision result, confidence score, risk level, reasoning, and recommended action for transparent monitoring.</li>
+                    <li>Web application developed using Flask.</li>
+                </ul>
+                <button onclick="goHome()">⬅ Back to Home</button>
+            </div>
+
+            <div id="team" class="section">
+                <h3>Team Details</h3>
+                <ul>
+                    <li><b>Team Leader:</b> A Sathwika</li>
+                    <li>D Vishnu Priya</li>
+                    <li>B Saahithi</li>
+                    <li>K Avanthi</li>
+                    <li>Project Guide: Dr. P. S. NAVEEN KUMAR, Ph. D</li>
+                </ul>
+                <button onclick="goHome()">⬅ Back to Home</button>
+            </div>
+
+        </div>
+
+        <!-- RIGHT LOGIN -->
+        <div class="right">
+            <div class="profile-icon">
+                <img src="{{ url_for('static', filename='user.jpeg') }}">
+            </div>
+
+            <h2 style="color:#c81ad2;">Login</h2>
+
+            <form method="POST" action="/">
+                <div class="input-box">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-box">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+
+                <button class="login-btn">LOGIN</button>
+
+                <!-- FORGOT PASSWORD -->
+                <div class="forgot-link">
+                    <a href="#" onclick="forgotPassword()">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function openSection(id) {
+    document.getElementById("homeMenu").style.display = "none";
+    document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+    document.getElementById(id).style.display = "block";
+}
+
+function goHome() {
+    document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+    document.getElementById("homeMenu").style.display = "block";
+}
+
+function forgotPassword() {
+    alert("Forgot Password?\n\nPlease contact the System Administrator for password recovery.");
+}
+</script>
+
+</body>
+</html>
